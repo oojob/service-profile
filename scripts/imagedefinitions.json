@@ -1,0 +1,6 @@
+[
+  {
+    "name":"AccountService",
+    "imageUri":"docker.pkg.github.com/oojob/service-company/company:prod"
+  }
+]
