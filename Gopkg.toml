@@ -28,3 +28,11 @@
 [prune]
   go-tests = true
   unused-packages = true
+
+[[constraint]]
+  branch = "master"
+  name = "github.com/oojob/protobuf"
+
+[[constraint]]
+  branch = "master"
+  name = "github.com/oojob/protorepo-profile-go"
