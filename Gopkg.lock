@@ -120,11 +120,11 @@
 
 [[projects]]
   branch = "master"
-  digest = "1:88bdad2ffffcf8128e3403d4ff6c0aca126faf7c51d0746c36e55edf52666c29"
+  digest = "1:f68b1597a462a258c129391df9f062d77471a5c815501ad774119a5b93eac699"
   name = "github.com/oojob/protobuf"
   packages = ["."]
   pruneopts = "UT"
-  revision = "977163da9521ba926d8736ba0d137434cfbee518"
+  revision = "287a04b490c2bead95fa022e9c66d0682d814388"
 
 [[projects]]
   branch = "master"
@@ -136,11 +136,11 @@
 
 [[projects]]
   branch = "master"
-  digest = "1:5bc2918f789f6cde4f014a2b787a99ededbcf792ddbe59bf86f00a43202604eb"
+  digest = "1:3d56e7d18871dc8cd4e68e71d5deed68a7b6863fc666cd18c12add67e9fdff74"
   name = "github.com/oojob/protorepo-profile-go"
   packages = ["."]
   pruneopts = "UT"
-  revision = "a622476a57af8cd9d90a447c223ad94338a8b35e"
+  revision = "0aabb2fffdd2c5e979e6dc03a1a96183615fa90f"
 
 [[projects]]
   branch = "master"
@@ -481,15 +481,27 @@
   analyzer-name = "dep"
   analyzer-version = 1
   input-imports = [
+    "github.com/golang/protobuf/ptypes/timestamp",
+    "github.com/grpc-ecosystem/go-grpc-middleware",
+    "github.com/grpc-ecosystem/go-grpc-middleware/ratelimit",
+    "github.com/grpc-ecosystem/go-grpc-middleware/recovery",
+    "github.com/grpc-ecosystem/go-grpc-middleware/tags",
     "github.com/oojob/protobuf",
     "github.com/oojob/protorepo-profile-go",
     "github.com/oojob/service-company/src/cmd",
     "github.com/pkg/errors",
+    "github.com/sirupsen/logrus",
     "github.com/spf13/cobra",
     "github.com/spf13/viper",
     "go.mongodb.org/mongo-driver/mongo",
     "go.mongodb.org/mongo-driver/mongo/options",
     "go.mongodb.org/mongo-driver/mongo/readpref",
+    "google.golang.org/grpc",
+    "google.golang.org/grpc/codes",
+    "google.golang.org/grpc/encoding/gzip",
+    "google.golang.org/grpc/keepalive",
+    "google.golang.org/grpc/reflection",
+    "google.golang.org/grpc/status",
   ]
   solver-name = "gps-cdcl"
   solver-version = 1

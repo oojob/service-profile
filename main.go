@@ -1,7 +1,7 @@
 package main
 
 import (
-	"github.com/oojob/service-company/src/cmd"
+	"github.com/oojob/service-profile/src/cmd"
 )
 
 func main() {
