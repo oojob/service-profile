@@ -13,9 +13,21 @@ import (
 
 // CreateProfile cretaes a profile
 func (c *API) CreateProfile(ctx context.Context, in *profile.Profile) (*profile.Profile, error) {
+	identity := in.GetIdentity()
+
 	profileData := model.Profile{
 		GivenName: "dododucck",
-		Identity:  in.GetIdentity(),
+		Identity: model.IdentifierModel{
+			Identifier:                identity.GetIdentifier(),
+			Name:                      identity.GetName(),
+			AlternateName:             identity.GetAlternateName(),
+			Type:                      identity.GetType(),
+			AdditionalType:            identity.GetAdditionalType(),
+			Description:               identity.GetDescription(),
+			DisambiguatingDescription: identity.GetDisambiguatingDescription(),
+			Headline:                  identity.GetHeadline(),
+			Slogan:                    identity.GetSlogan(),
+		},
 	}
 	// fmt.Printf(profileData.GivenName)
 

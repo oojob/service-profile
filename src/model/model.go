@@ -1,7 +1,6 @@
 package model
 
 import (
-	protobuf "github.com/oojob/protobuf"
 	"go.mongodb.org/mongo-driver/bson/primitive"
 )
 
@@ -14,18 +13,18 @@ import (
 // 	ValidThrough time.Time             `bson:"valid_through,omitempty"`
 // }
 
-// // IdentifierModel identifier
-// type IdentifierModel struct {
-// 	Identifier                string `bson:"identifier,omitempty"`
-// 	Name                      string `bson:"name,omitempty"`
-// 	AlternateName             string `bson:"alternate_name,omitempty"`
-// 	Type                      string `bson:"type,omitempty"`
-// 	AdditionalType            string `bson:"additional_type,omitempty"`
-// 	Description               string `bson:"description,omitempty"`
-// 	DisambiguatingDescription string `bson:"disambiguating_description,omitempty"`
-// 	Headline                  string `bson:"headline,omitempty"`
-// 	Slogan                    string `bson:"slogan,omitempty"`
-// }
+// IdentifierModel identifier
+type IdentifierModel struct {
+	Identifier                string `bson:"identifier,omitempty"`
+	Name                      string `bson:"name,omitempty"`
+	AlternateName             string `bson:"alternate_name,omitempty"`
+	Type                      string `bson:"type,omitempty"`
+	AdditionalType            string `bson:"additional_type,omitempty"`
+	Description               string `bson:"description,omitempty"`
+	DisambiguatingDescription string `bson:"disambiguating_description,omitempty"`
+	Headline                  string `bson:"headline,omitempty"`
+	Slogan                    string `bson:"slogan,omitempty"`
+}
 
 // // ProfileSecutiryModel profile security
 // type ProfileSecutiryModel struct {
@@ -65,12 +64,12 @@ import (
 
 // Profile profile model schema
 type Profile struct {
-	Identity        *protobuf.Identifier `bson:"identity,omitempty"`
-	ID              primitive.ObjectID   `bson:"_id,omitempty"`
-	GivenName       string               `bson:"given_name,omitempty"`
-	MiddleName      string               `bson:"middle_name,omitempty"`
-	FamilyName      string               `bson:"family_name,omitempty"`
-	Username        string               `bson:"username,omitempty"`
-	Gender          string               `bson:"gender,omitempty"`
-	CurrentPosition string               `bson:"current_position,omitempty"`
+	Identity        IdentifierModel    `bson:"identity,omitempty"`
+	ID              primitive.ObjectID `bson:"_id,omitempty"`
+	GivenName       string             `bson:"given_name,omitempty"`
+	MiddleName      string             `bson:"middle_name,omitempty"`
+	FamilyName      string             `bson:"family_name,omitempty"`
+	Username        string             `bson:"username,omitempty"`
+	Gender          string             `bson:"gender,omitempty"`
+	CurrentPosition string             `bson:"current_position,omitempty"`
 }
