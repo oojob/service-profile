@@ -2,12 +2,33 @@ package api
 
 import (
 	"context"
+	"fmt"
 
 	protobuf "github.com/oojob/protobuf"
 	profile "github.com/oojob/protorepo-profile-go"
+	model "github.com/oojob/service-profile/src/model"
+	"google.golang.org/grpc/codes"
+	"google.golang.org/grpc/status"
 )
 
+// CreateProfile cretaes a profile
 func (c *API) CreateProfile(ctx context.Context, in *profile.Profile) (*profile.Profile, error) {
+	profileData := model.Profile{
+		GivenName: "dododucck",
+		Identity:  in.GetIdentity(),
+	}
+	// fmt.Printf(profileData.GivenName)
+
+	context := c.App.NewContext()
+	_, err := context.CreateProfile(&profileData)
+
+	if err != nil {
+		return nil, status.Errorf(
+			codes.Internal,
+			fmt.Sprintf("Invalid Document: %v", err),
+		)
+	}
+
 	return nil, nil
 }
 
