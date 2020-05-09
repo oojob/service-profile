@@ -20,15 +20,6 @@ type EducationModel struct {
 	Show      bool   `bson:"show,omitempty"`
 }
 
-// TimeModel time
-type TimeModel struct {
-	Opens        time.Time             `bson:"opens,omitempty"`
-	Closes       time.Time             `bson:"closes,omitempty"`
-	DaysOfWeek   []protobuf.DaysOfWeek `bson:"days_of_week,omitempty"`
-	ValidFrom    time.Time             `bson:"valid_from,omitempty"`
-	ValidThrough time.Time             `bson:"valid_through,omitempty"`
-}
-
 // IdentifierModel identifier
 type IdentifierModel struct {
 	Identifier                primitive.ObjectID `bson:"identifier,omitempty"`
