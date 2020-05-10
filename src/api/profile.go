@@ -11,29 +11,86 @@ import (
 	"google.golang.org/grpc/status"
 )
 
+func getIdentity(identity *protobuf.Identifier) model.IdentifierModel {
+	identityModel := model.IdentifierModel{
+		Identifier:                identity.GetIdentifier(),
+		Name:                      identity.GetName(),
+		AlternateName:             identity.GetAlternateName(),
+		Type:                      identity.GetType(),
+		AdditionalType:            identity.GetAdditionalType(),
+		Description:               identity.GetDescription(),
+		DisambiguatingDescription: identity.GetDisambiguatingDescription(),
+		Headline:                  identity.GetHeadline(),
+		Slogan:                    identity.GetSlogan(),
+	}
+
+	return identityModel
+}
+
+func getEmail(email *protobuf.Email) model.EmailModel {
+	emailModel := model.EmailModel{
+		Email:       email.GetEmail(),
+		Show:        email.GetShow(),
+		EmailStatus: email.GetStatus(),
+	}
+
+	return emailModel
+}
+
+func getEducation(education *profile.Education) model.EducationModel {
+	educationModel := model.EducationModel{
+		Education: education.GetEducation(),
+		Show:      education.GetShow(),
+	}
+
+	return educationModel
+}
+
+func getAddress(address *protobuf.Address) model.AddressModel {
+	addressModel := model.AddressModel{
+		Country:    address.GetCountry(),
+		Locality:   address.GetLocality(),
+		Region:     address.GetRegion(),
+		PostalCode: address.GetPostalCode(),
+		Street:     address.GetStreet(),
+	}
+
+	return addressModel
+}
+
+func getSecurity(security *profile.ProfileSecurity) model.ProfileSecutiryModel {
+	securityModel := model.ProfileSecutiryModel{
+		Password:     security.GetPassword(),
+		PasswordSalt: security.GetPasswordSalt(),
+		PasswordHash: security.GetPasswordHash(),
+		Code:         security.GetCode(),
+		CodeType:     security.GetCodeType(),
+		AccountType:  security.GetAccountType(),
+		Verified:     security.GetVerified(),
+	}
+
+	return securityModel
+}
+
 // CreateProfile cretaes a profile
 func (c *API) CreateProfile(ctx context.Context, in *profile.Profile) (*profile.Profile, error) {
-	identity := in.GetIdentity()
-
 	profileData := model.Profile{
-		GivenName: "dododucck",
-		Identity: model.IdentifierModel{
-			Identifier:                identity.GetIdentifier(),
-			Name:                      identity.GetName(),
-			AlternateName:             identity.GetAlternateName(),
-			Type:                      identity.GetType(),
-			AdditionalType:            identity.GetAdditionalType(),
-			Description:               identity.GetDescription(),
-			DisambiguatingDescription: identity.GetDisambiguatingDescription(),
-			Headline:                  identity.GetHeadline(),
-			Slogan:                    identity.GetSlogan(),
-		},
+		Identity:        getIdentity(in.GetIdentity()),
+		GivenName:       in.GetGivenName(),
+		MiddleName:      in.GetMiddleName(),
+		FamilyName:      in.GetFamilyName(),
+		Username:        in.GetFamilyName(),
+		Email:           getEmail(in.GetEmail()),
+		Gender:          in.GetGender(),
+		CurrentPosition: in.GetCurrentPosition(),
+		Education:       getEducation(in.GetEducation()),
+		Address:         getAddress(in.GetAddress()),
+		Security:        getSecurity(in.GetSecurity()),
 	}
-	// fmt.Printf(profileData.GivenName)
 
 	context := c.App.NewContext()
-	_, err := context.CreateProfile(&profileData)
 
+	_, err := context.CreateProfile(&profileData)
 	if err != nil {
 		return nil, status.Errorf(
 			codes.Internal,
@@ -44,22 +101,27 @@ func (c *API) CreateProfile(ctx context.Context, in *profile.Profile) (*profile.
 	return nil, nil
 }
 
+// ConfirmProfile :- confirm acccount
 func (c *API) ConfirmProfile(ctx context.Context, in *profile.ConfirmProfileRequest) (*protobuf.DefaultResponse, error) {
 	return nil, nil
 }
 
+// ReadProfile :- read profile
 func (c *API) ReadProfile(ctx context.Context, in *profile.ReadProfileRequest) (*profile.Profile, error) {
 	return nil, nil
 }
 
+// UpdateProfile :- update account
 func (c *API) UpdateProfile(ctx context.Context, in *profile.Profile) (*profile.Profile, error) {
 	return nil, nil
 }
 
+// ValidateUsername :- validate username
 func (c *API) ValidateUsername(ctx context.Context, in *profile.ValidateUsernameRequest) (*protobuf.DefaultResponse, error) {
 	return nil, nil
 }
 
+// ValidateEmail :- validate email
 func (c *API) ValidateEmail(ctx context.Context, in *profile.ValidateEmailRequest) (*protobuf.DefaultResponse, error) {
 	return nil, nil
 }

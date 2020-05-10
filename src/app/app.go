@@ -45,5 +45,6 @@ func New() (app *App, err error) {
 
 // Close close the database
 func (a *App) Close() error {
-	return a.Database.Disconnect(context.TODO())
+	client := a.Database.Client()
+	return client.Disconnect(context.Background())
 }

@@ -1,8 +1,7 @@
 package model
 
 import (
-	"time"
-
+	"github.com/golang/protobuf/ptypes/timestamp"
 	protobuf "github.com/oojob/protobuf"
 	"go.mongodb.org/mongo-driver/bson/primitive"
 )
@@ -22,15 +21,15 @@ type EducationModel struct {
 
 // IdentifierModel identifier
 type IdentifierModel struct {
-	Identifier                primitive.ObjectID `bson:"identifier,omitempty"`
-	Name                      string             `bson:"name,omitempty"`
-	AlternateName             string             `bson:"alternate_name,omitempty"`
-	Type                      string             `bson:"type,omitempty"`
-	AdditionalType            string             `bson:"additional_type,omitempty"`
-	Description               string             `bson:"description,omitempty"`
-	DisambiguatingDescription string             `bson:"disambiguating_description,omitempty"`
-	Headline                  string             `bson:"headline,omitempty"`
-	Slogan                    string             `bson:"slogan,omitempty"`
+	Identifier                string `bson:"identifier,omitempty"`
+	Name                      string `bson:"name,omitempty"`
+	AlternateName             string `bson:"alternate_name,omitempty"`
+	Type                      string `bson:"type,omitempty"`
+	AdditionalType            string `bson:"additional_type,omitempty"`
+	Description               string `bson:"description,omitempty"`
+	DisambiguatingDescription string `bson:"disambiguating_description,omitempty"`
+	Headline                  string `bson:"headline,omitempty"`
+	Slogan                    string `bson:"slogan,omitempty"`
 }
 
 // ProfileSecutiryModel profile security
@@ -55,11 +54,11 @@ type AddressModel struct {
 
 // MetadataModel metadata
 type MetadataModel struct {
-	CreatedAt     time.Time `bson:"created_at,omitempty"`
-	UpdatedAt     time.Time `bson:"updated_at,omitempty"`
-	PublishedDate time.Time `bson:"published_date,omitempty"`
-	EndDate       time.Time `bson:"end_date,omitempty"`
-	LastActive    time.Time `bson:"last_active,omitempty"`
+	CreatedAt     timestamp.Timestamp `bson:"created_at,omitempty"`
+	UpdatedAt     timestamp.Timestamp `bson:"updated_at,omitempty"`
+	PublishedDate timestamp.Timestamp `bson:"published_date,omitempty"`
+	EndDate       timestamp.Timestamp `bson:"end_date,omitempty"`
+	LastActive    timestamp.Timestamp `bson:"last_active,omitempty"`
 }
 
 // Profile profile model schema
@@ -72,7 +71,7 @@ type Profile struct {
 	Username        string               `bson:"username,omitempty"`
 	Email           EmailModel           `bson:"email,omitempty"`
 	Gender          string               `bson:"gender,omitempty"`
-	Birthdate       time.Time            `bson:"birthdate,omitempty"`
+	Birthdate       timestamp.Timestamp  `bson:"birthdate,omitempty"`
 	CurrentPosition string               `bson:"current_position,omitempty"`
 	Education       EducationModel       `bson:"education,omitempty"`
 	Address         AddressModel         `bson:"address,omitempty"`
