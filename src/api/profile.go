@@ -120,37 +120,45 @@ func (c *API) UpdateProfile(ctx context.Context, in *profile.Profile) (*protobuf
 
 // ValidateUsername :- validate username
 func (c *API) ValidateUsername(ctx context.Context, in *profile.ValidateUsernameRequest) (*protobuf.DefaultResponse, error) {
+	c.mu.Lock()
+	defer c.mu.Unlock()
 	context := c.App.NewContext()
 
 	success, err := context.ValidateUsername(in.Username)
 	if err != nil {
 		// span.SetStatus(trace.Status{Code: trace.StatusCodeInternal, Message: err.Error()})
 		return nil, status.Errorf(
-			codes.Internal,
+			codes.NotFound,
 			fmt.Sprintf("Invalid Username Value: %v", err),
 		)
 	}
 
 	return &protobuf.DefaultResponse{
 		Status: success,
+		Code:   int64(codes.OK),
+		Error:  "",
 	}, nil
 }
 
 // ValidateEmail :- validate email
 func (c *API) ValidateEmail(ctx context.Context, in *profile.ValidateEmailRequest) (*protobuf.DefaultResponse, error) {
+	c.mu.Lock()
+	defer c.mu.Unlock()
 	context := c.App.NewContext()
 
 	success, err := context.ValidateEmail(in.Email)
 	if err != nil {
 		// span.SetStatus(trace.Status{Code: trace.StatusCodeInternal, Message: err.Error()})
 		return nil, status.Errorf(
-			codes.Internal,
+			codes.NotFound,
 			fmt.Sprintf("Invalid Email Value: %v", err),
 		)
 	}
 
 	return &protobuf.DefaultResponse{
 		Status: success,
+		Code:   int64(codes.OK),
+		Error:  "",
 	}, nil
 }
 
