@@ -74,6 +74,10 @@ func getSecurity(security *profile.ProfileSecurity) model.ProfileSecutiryModel {
 
 // CreateProfile cretaes a profile
 func (c *API) CreateProfile(ctx context.Context, in *profile.Profile) (*protobuf.Id, error) {
+	c.mu.Lock()
+	defer c.mu.Unlock()
+	context := c.App.NewContext()
+
 	profileData := model.Profile{
 		Identity:        getIdentity(in.GetIdentity()),
 		GivenName:       in.GetGivenName(),
@@ -87,8 +91,6 @@ func (c *API) CreateProfile(ctx context.Context, in *profile.Profile) (*protobuf
 		Address:         getAddress(in.GetAddress()),
 		Security:        getSecurity(in.GetSecurity()),
 	}
-
-	context := c.App.NewContext()
 
 	res, err := context.CreateProfile(&profileData)
 	if err != nil {
