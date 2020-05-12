@@ -1,11 +1,14 @@
 package api
 
 import (
+	"sync"
+
 	"github.com/oojob/service-profile/src/app"
 )
 
 // API api base struct
 type API struct {
+	mu     sync.Mutex
 	App    *app.App
 	Config *Config
 }

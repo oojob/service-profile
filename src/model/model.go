@@ -48,7 +48,7 @@ type AddressModel struct {
 	Country    string `bson:"country,omitempty"`
 	Locality   string `bson:"locality,omitempty"`
 	Region     string `bson:"region,omitempty"`
-	PostalCode string `bson:"postal_code,omitempty"`
+	PostalCode int64  `bson:"postal_code,omitempty"`
 	Street     string `bson:"street,omitempty"`
 }
 

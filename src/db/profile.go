@@ -78,18 +78,19 @@ func (db *Database) ValidateUsername(username string) (bool, error) {
 	defer session.EndSession(context.Background())
 
 	var profile *model.Profile
-	session.WithTransaction(context.Background(), func(sessionContext mongo.SessionContext) (interface{}, error) {
+	_, err = session.WithTransaction(context.Background(), func(sessionContext mongo.SessionContext) (interface{}, error) {
 		result := profileCollection.FindOne(sessionContext, &bson.M{"username": username})
 		if err := result.Decode(&profile); err != nil {
 			return false, err
 		}
 
-		if profile != nil {
-			return false, nil
-		}
-		return true, nil
+		return false, nil
 	})
-	return false, nil
+
+	if profile != nil {
+		return true, nil
+	}
+	return false, err
 }
 
 // CreateProfile create profile entity

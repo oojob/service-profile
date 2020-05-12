@@ -120,19 +120,19 @@
 
 [[projects]]
   branch = "master"
-  digest = "1:f68b1597a462a258c129391df9f062d77471a5c815501ad774119a5b93eac699"
+  digest = "1:a20ec5206b8952002fd4c56459dd7e39102040bd72ac949cbffdf2ce220d6d1a"
   name = "github.com/oojob/protobuf"
   packages = ["."]
   pruneopts = "UT"
-  revision = "287a04b490c2bead95fa022e9c66d0682d814388"
+  revision = "92edfde84103089f51fd6afb7a3a45fe67bb8ddf"
 
 [[projects]]
   branch = "master"
-  digest = "1:b0ab68a1d2cee7b2c0a0287dc681c3ac101d57e8f28c2c37b2692cc6ade4ea30"
+  digest = "1:b892410348de10f2efdedbaddb574090772e46aa315a4ecfd58d92516b67347f"
   name = "github.com/oojob/protorepo-profile-go"
   packages = ["."]
   pruneopts = "UT"
-  revision = "4b542a577b7323d56a2581f447aa3eff077672b8"
+  revision = "e8d1132b4cbf994d9b9cc9acd233f920ac0964bd"
 
 [[projects]]
   digest = "1:1d835d5c3153aceef96c2d58866edde1aa70e25339831cff07b1e47456410e5c"
@@ -291,7 +291,7 @@
     "pbkdf2",
   ]
   pruneopts = "UT"
-  revision = "4b2356b1ed79e6be3deca3737a3db3d132d2847a"
+  revision = "06a226fb4e3765ef3f48aa2852b401bc7b98e981"
 
 [[projects]]
   branch = "master"
@@ -325,7 +325,7 @@
     "unix",
   ]
   pruneopts = "UT"
-  revision = "6aff5f38e54f06f432ddfd9b4af5bf0de052bc08"
+  revision = "7e40ca221e254089b05fb9efcd69844a57f6a367"
 
 [[projects]]
   digest = "1:8d8faad6b12a3a4c819a3f9618cb6ee1fa1cfc33253abeeea8b55336721e3405"
@@ -358,7 +358,7 @@
   name = "google.golang.org/genproto"
   packages = ["googleapis/rpc/status"]
   pruneopts = "UT"
-  revision = "43844f6eee31fd8ee95bfe5daf9a24a45c5f3df2"
+  revision = "f5ebc3bea3804948c8feb1e2b62323d73add1083"
 
 [[projects]]
   digest = "1:d123dd3aaf10a6875516a298cd1124693b76ec9565e564820f3cc639d207a0c7"
@@ -484,6 +484,7 @@
     "github.com/sirupsen/logrus",
     "github.com/spf13/cobra",
     "github.com/spf13/viper",
+    "go.mongodb.org/mongo-driver/bson",
     "go.mongodb.org/mongo-driver/bson/primitive",
     "go.mongodb.org/mongo-driver/mongo",
     "go.mongodb.org/mongo-driver/mongo/options",

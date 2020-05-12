@@ -65,7 +65,7 @@ func getSecurity(security *profile.ProfileSecurity) model.ProfileSecutiryModel {
 		PasswordHash: security.GetPasswordHash(),
 		Code:         security.GetCode(),
 		CodeType:     security.GetCodeType(),
-		AccountType:  security.GetAccountType(),
+		AccountType:  "basic", // profile.ProfileSecurity_AccountType_name[security.GetAccountType()]
 		Verified:     security.GetVerified(),
 	}
 
@@ -73,13 +73,13 @@ func getSecurity(security *profile.ProfileSecurity) model.ProfileSecutiryModel {
 }
 
 // CreateProfile cretaes a profile
-func (c *API) CreateProfile(ctx context.Context, in *profile.Profile) (*profile.Profile, error) {
+func (c *API) CreateProfile(ctx context.Context, in *profile.Profile) (*protobuf.Id, error) {
 	profileData := model.Profile{
 		Identity:        getIdentity(in.GetIdentity()),
 		GivenName:       in.GetGivenName(),
 		MiddleName:      in.GetMiddleName(),
 		FamilyName:      in.GetFamilyName(),
-		Username:        in.GetFamilyName(),
+		Username:        in.GetUsername(),
 		Email:           getEmail(in.GetEmail()),
 		Gender:          in.GetGender(),
 		CurrentPosition: in.GetCurrentPosition(),
@@ -90,7 +90,7 @@ func (c *API) CreateProfile(ctx context.Context, in *profile.Profile) (*profile.
 
 	context := c.App.NewContext()
 
-	_, err := context.CreateProfile(&profileData)
+	res, err := context.CreateProfile(&profileData)
 	if err != nil {
 		return nil, status.Errorf(
 			codes.Internal,
@@ -98,7 +98,9 @@ func (c *API) CreateProfile(ctx context.Context, in *profile.Profile) (*profile.
 		)
 	}
 
-	return nil, nil
+	return &protobuf.Id{
+		Id: res,
+	}, nil
 }
 
 // ConfirmProfile :- confirm acccount
@@ -112,25 +114,66 @@ func (c *API) ReadProfile(ctx context.Context, in *profile.ReadProfileRequest) (
 }
 
 // UpdateProfile :- update account
-func (c *API) UpdateProfile(ctx context.Context, in *profile.Profile) (*profile.Profile, error) {
+func (c *API) UpdateProfile(ctx context.Context, in *profile.Profile) (*protobuf.Id, error) {
 	return nil, nil
 }
 
 // ValidateUsername :- validate username
 func (c *API) ValidateUsername(ctx context.Context, in *profile.ValidateUsernameRequest) (*protobuf.DefaultResponse, error) {
-	return nil, nil
+	context := c.App.NewContext()
+
+	success, err := context.ValidateUsername(in.Username)
+	if err != nil {
+		// span.SetStatus(trace.Status{Code: trace.StatusCodeInternal, Message: err.Error()})
+		return nil, status.Errorf(
+			codes.Internal,
+			fmt.Sprintf("Invalid Username Value: %v", err),
+		)
+	}
+
+	return &protobuf.DefaultResponse{
+		Status: success,
+	}, nil
 }
 
 // ValidateEmail :- validate email
 func (c *API) ValidateEmail(ctx context.Context, in *profile.ValidateEmailRequest) (*protobuf.DefaultResponse, error) {
-	return nil, nil
+	context := c.App.NewContext()
+
+	success, err := context.ValidateEmail(in.Email)
+	if err != nil {
+		// span.SetStatus(trace.Status{Code: trace.StatusCodeInternal, Message: err.Error()})
+		return nil, status.Errorf(
+			codes.Internal,
+			fmt.Sprintf("Invalid Email Value: %v", err),
+		)
+	}
+
+	return &protobuf.DefaultResponse{
+		Status: success,
+	}, nil
 }
 
 // Check check the context
 func (c *API) Check(ctx context.Context, in *protobuf.HealthCheckRequest) (*protobuf.HealthCheckResponse, error) {
-	return &protobuf.HealthCheckResponse{
-		Status: protobuf.HealthCheckResponse_SERVING,
-	}, nil
+	c.mu.Lock()
+	defer c.mu.Unlock()
+
+	if in.Service == "" {
+		// check the server overall health status.
+		return &protobuf.HealthCheckResponse{
+			Status: protobuf.HealthCheckResponse_NOT_SERVING,
+		}, nil
+	}
+
+	statusMap := make(map[string]protobuf.HealthCheckResponse_ServingStatus)
+	if status, ok := statusMap[in.Service]; ok {
+		return &protobuf.HealthCheckResponse{
+			Status: status,
+		}, nil
+	}
+
+	return nil, status.Errorf(codes.Internal, "unknown service")
 }
 
 // Watch watch the serving status
