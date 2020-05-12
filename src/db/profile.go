@@ -145,3 +145,25 @@ func (db *Database) CreateProfile(in *model.Profile) (string, error) {
 
 	return inerstionID, err
 }
+
+// ReadProfile : -read a single profile
+func (db *Database) ReadProfile(id *primitive.ObjectID) (*model.Profile, error) {
+	profileCollection := db.Collection("profile")
+	session, err := db.Client().StartSession()
+	if err != nil {
+		return nil, err
+	}
+	defer session.EndSession(context.Background())
+
+	var profile model.Profile
+	_, err = session.WithTransaction(context.Background(), func(sessionContext mongo.SessionContext) (interface{}, error) {
+		result := profileCollection.FindOne(sessionContext, &bson.M{"_id": id})
+		if err := result.Decode(&profile); err != nil {
+			return false, err
+		}
+
+		return false, nil
+	})
+
+	return &profile, err
+}

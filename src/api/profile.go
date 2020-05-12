@@ -7,6 +7,7 @@ import (
 	protobuf "github.com/oojob/protobuf"
 	profile "github.com/oojob/protorepo-profile-go"
 	model "github.com/oojob/service-profile/src/model"
+	"go.mongodb.org/mongo-driver/bson/primitive"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
 )
@@ -112,6 +113,24 @@ func (c *API) ConfirmProfile(ctx context.Context, in *profile.ConfirmProfileRequ
 
 // ReadProfile :- read profile
 func (c *API) ReadProfile(ctx context.Context, in *profile.ReadProfileRequest) (*profile.Profile, error) {
+	c.mu.Lock()
+	defer c.mu.Unlock()
+	context := c.App.NewContext()
+
+	id, err := primitive.ObjectIDFromHex(in.GetAccountId())
+	if err != nil {
+		return nil, status.Errorf(codes.InvalidArgument, fmt.Sprintf("Could not convert to ObjectId: %v", err))
+	}
+
+	_, err = context.ReadProfile(&id)
+	if err != nil {
+		// span.SetStatus(trace.Status{Code: trace.StatusCodeInternal, Message: err.Error()})
+		return nil, status.Errorf(
+			codes.NotFound,
+			fmt.Sprintf("Invalid Email Value: %v", err),
+		)
+	}
+
 	return nil, nil
 }
 
