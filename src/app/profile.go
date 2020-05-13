@@ -1,6 +1,7 @@
 package app
 
 import (
+	profile "github.com/oojob/protorepo-profile-go"
 	"github.com/oojob/service-profile/src/model"
 	"go.mongodb.org/mongo-driver/bson/primitive"
 )
@@ -8,6 +9,16 @@ import (
 // CreateProfile :- creates a profile
 func (ctx *Context) CreateProfile(profile *model.Profile) (string, error) {
 	return ctx.Database.CreateProfile(profile)
+}
+
+// UpdateProfile :- updates a profile
+func (ctx *Context) UpdateProfile(profile *model.Profile) (string, error) {
+	return ctx.Database.UpdateProfile(profile)
+}
+
+// Auth :- help's us to authenticate
+func (ctx *Context) Auth(in *profile.AuthRequest) (string, error) {
+	return ctx.Database.Auth(in)
 }
 
 // ReadProfile : -read a single profile

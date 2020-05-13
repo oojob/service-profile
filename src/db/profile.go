@@ -3,6 +3,7 @@ package db
 import (
 	"context"
 	"crypto/rand"
+	"errors"
 	"fmt"
 	"io"
 
@@ -10,6 +11,7 @@ import (
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
 
+	profile "github.com/oojob/protorepo-profile-go"
 	"github.com/oojob/service-profile/src/model"
 	uuid "github.com/satori/go.uuid"
 	"go.mongodb.org/mongo-driver/bson"
@@ -144,6 +146,69 @@ func (db *Database) CreateProfile(in *model.Profile) (string, error) {
 	})
 
 	return inerstionID, err
+}
+
+// UpdateProfile create profile entity
+func (db *Database) UpdateProfile(in *model.Profile) (string, error) {
+	companyCollection := db.Collection("profile")
+	session, err := db.Client().StartSession()
+	if err != nil {
+		return "", err
+	}
+	defer session.EndSession(context.Background())
+
+	in.Metadata = model.MetadataModel{
+		UpdatedAt:     *ptypes.TimestampNow(),
+		PublishedDate: *ptypes.TimestampNow(),
+		EndDate:       *ptypes.TimestampNow(),
+		LastActive:    *ptypes.TimestampNow(),
+	}
+
+	_, err = session.WithTransaction(context.Background(), func(sessionContext mongo.SessionContext) (interface{}, error) {
+		_, err := companyCollection.UpdateOne(sessionContext, &bson.M{"_id": in.ID}, in)
+		if err != nil {
+			return "", err
+		}
+
+		return in.ID.Hex(), nil
+	})
+
+	return in.ID.Hex(), err
+}
+
+// Auth :- authentication
+func (db *Database) Auth(in *profile.AuthRequest) (string, error) {
+	profileCollection := db.Collection("profile")
+	session, err := db.Client().StartSession()
+	if err != nil {
+		return "", err
+	}
+	defer session.EndSession(context.Background())
+
+	var profile model.Profile
+	_, err = session.WithTransaction(context.Background(), func(sessionContext mongo.SessionContext) (interface{}, error) {
+		result := profileCollection.FindOne(sessionContext, bson.M{"username": in.GetUsername()})
+		if err := result.Decode(&profile); err != nil {
+			return "", err
+		}
+
+		return "", nil
+	})
+
+	if profile.Username == "" {
+		return "", errors.New("no account found for this usernames")
+	}
+
+	if matched := CheckPasswordHash(in.GetPassword(), profile.Security.Password); !matched {
+		return "", errors.New("password do not matched")
+	}
+
+	token, err := db.Encode(&profile)
+	if err != nil {
+		return "", err
+	}
+
+	return token, nil
 }
 
 // ReadProfile : -read a single profile

@@ -73,13 +73,8 @@ func getSecurity(security *profile.ProfileSecurity) model.ProfileSecutiryModel {
 	return securityModel
 }
 
-// CreateProfile cretaes a profile
-func (c *API) CreateProfile(ctx context.Context, in *profile.Profile) (*protobuf.Id, error) {
-	c.mu.Lock()
-	defer c.mu.Unlock()
-	context := c.App.NewContext()
-
-	profileData := model.Profile{
+func getProfile(in *profile.Profile) model.Profile {
+	profileModel := model.Profile{
 		Identity:        getIdentity(in.GetIdentity()),
 		GivenName:       in.GetGivenName(),
 		MiddleName:      in.GetMiddleName(),
@@ -92,6 +87,16 @@ func (c *API) CreateProfile(ctx context.Context, in *profile.Profile) (*protobuf
 		Address:         getAddress(in.GetAddress()),
 		Security:        getSecurity(in.GetSecurity()),
 	}
+
+	return profileModel
+}
+
+// CreateProfile cretaes a profile
+func (c *API) CreateProfile(ctx context.Context, in *profile.Profile) (*protobuf.Id, error) {
+	c.mu.Lock()
+	defer c.mu.Unlock()
+	context := c.App.NewContext()
+	profileData := getProfile(in)
 
 	res, err := context.CreateProfile(&profileData)
 	if err != nil {
@@ -136,7 +141,22 @@ func (c *API) ReadProfile(ctx context.Context, in *profile.ReadProfileRequest) (
 
 // UpdateProfile :- update account
 func (c *API) UpdateProfile(ctx context.Context, in *profile.Profile) (*protobuf.Id, error) {
-	return nil, nil
+	c.mu.Lock()
+	defer c.mu.Unlock()
+	context := c.App.NewContext()
+	profileData := getProfile(in)
+
+	res, err := context.UpdateProfile(&profileData)
+	if err != nil {
+		return nil, status.Errorf(
+			codes.Internal,
+			fmt.Sprintf("Invalid Document: %v", err),
+		)
+	}
+
+	return &protobuf.Id{
+		Id: res,
+	}, nil
 }
 
 // ValidateUsername :- validate username
@@ -180,6 +200,26 @@ func (c *API) ValidateEmail(ctx context.Context, in *profile.ValidateEmailReques
 		Status: success,
 		Code:   int64(codes.OK),
 		Error:  "",
+	}, nil
+}
+
+// Auth :- authenticates and generate jwt token
+func (c *API) Auth(ctx context.Context, in *profile.AuthRequest) (*profile.AuthResponse, error) {
+	c.mu.Lock()
+	defer c.mu.Unlock()
+	context := c.App.NewContext()
+
+	token, err := context.Auth(in)
+	if err != nil {
+		return nil, status.Errorf(
+			codes.NotFound,
+			fmt.Sprintf("Invalid Email Value: %v", err),
+		)
+	}
+
+	return &profile.AuthResponse{
+		Token: token,
+		Valid: true,
 	}, nil
 }
 
