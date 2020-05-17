@@ -48,8 +48,8 @@ func CheckPasswordHash(password, hash string) bool {
 
 // ValidateEmail :- check for existing email value
 func (db *Database) ValidateEmail(email string) (bool, error) {
-	profileCollection := db.Collection("profile")
-	session, err := db.Client().StartSession()
+	profileCollection := db.mongo.Collection("profile")
+	session, err := db.mongo.Client().StartSession()
 	if err != nil {
 		return false, err
 	}
@@ -73,8 +73,8 @@ func (db *Database) ValidateEmail(email string) (bool, error) {
 
 // ValidateUsername :- check for existing email value
 func (db *Database) ValidateUsername(username string) (bool, error) {
-	profileCollection := db.Collection("profile")
-	session, err := db.Client().StartSession()
+	profileCollection := db.mongo.Collection("profile")
+	session, err := db.mongo.Client().StartSession()
 	if err != nil {
 		return false, err
 	}
@@ -100,8 +100,8 @@ func (db *Database) ValidateUsername(username string) (bool, error) {
 func (db *Database) CreateProfile(in *model.Profile) (string, error) {
 	var inerstionID string
 
-	companyCollection := db.Collection("profile")
-	session, err := db.Client().StartSession()
+	companyCollection := db.mongo.Collection("profile")
+	session, err := db.mongo.Client().StartSession()
 	if err != nil {
 		return "", err
 	}
@@ -150,8 +150,8 @@ func (db *Database) CreateProfile(in *model.Profile) (string, error) {
 
 // UpdateProfile create profile entity
 func (db *Database) UpdateProfile(in *model.Profile) (string, error) {
-	companyCollection := db.Collection("profile")
-	session, err := db.Client().StartSession()
+	companyCollection := db.mongo.Collection("profile")
+	session, err := db.mongo.Client().StartSession()
 	if err != nil {
 		return "", err
 	}
@@ -178,8 +178,8 @@ func (db *Database) UpdateProfile(in *model.Profile) (string, error) {
 
 // Auth :- authentication
 func (db *Database) Auth(in *profile.AuthRequest) (string, error) {
-	profileCollection := db.Collection("profile")
-	session, err := db.Client().StartSession()
+	profileCollection := db.mongo.Collection("profile")
+	session, err := db.mongo.Client().StartSession()
 	if err != nil {
 		return "", err
 	}
@@ -213,8 +213,8 @@ func (db *Database) Auth(in *profile.AuthRequest) (string, error) {
 
 // ReadProfile : -read a single profile
 func (db *Database) ReadProfile(id *primitive.ObjectID) (*model.Profile, error) {
-	profileCollection := db.Collection("profile")
-	session, err := db.Client().StartSession()
+	profileCollection := db.mongo.Collection("profile")
+	session, err := db.mongo.Client().StartSession()
 	if err != nil {
 		return nil, err
 	}

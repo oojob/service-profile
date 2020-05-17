@@ -61,6 +61,16 @@ type MetadataModel struct {
 	LastActive    timestamp.Timestamp `bson:"last_active,omitempty"`
 }
 
+// TokenDetails for token data
+type TokenDetails struct {
+	AccessToken  string
+	RefreshToken string
+	AccessUUID   string
+	RefreshUUID  string
+	AtExpires    int64
+	RtExpires    int64
+}
+
 // Profile profile model schema
 type Profile struct {
 	ID              primitive.ObjectID   `bson:"_id,omitempty"`

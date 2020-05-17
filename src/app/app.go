@@ -1,8 +1,6 @@
 package app
 
 import (
-	"context"
-
 	"github.com/oojob/service-profile/src/db"
 	"github.com/sirupsen/logrus"
 )
@@ -45,6 +43,5 @@ func New() (app *App, err error) {
 
 // Close close the database
 func (a *App) Close() error {
-	client := a.Database.Client()
-	return client.Disconnect(context.Background())
+	return a.Database.Close()
 }
