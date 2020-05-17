@@ -218,9 +218,33 @@ func (c *API) Auth(ctx context.Context, in *profile.AuthRequest) (*profile.AuthR
 	}
 
 	return &profile.AuthResponse{
-		Token: token,
-		Valid: true,
+		AccessToken: token,
+		Valid:       true,
 	}, nil
+}
+
+// Logout help's us to logout from site
+func (c *API) Logout(ctx context.Context, in *profile.TokenRequest) (*protobuf.DefaultResponse, error) {
+	c.mu.Lock()
+	defer c.mu.Unlock()
+
+	return nil, nil
+}
+
+// RefreshToken help's us to refresh the access token without signing out
+func (c *API) RefreshToken(ctx context.Context, in *profile.TokenRequest) (*profile.AuthResponse, error) {
+	c.mu.Lock()
+	defer c.mu.Unlock()
+
+	return nil, nil
+}
+
+// VerifyToken help's us to verify the auth token
+func (c *API) VerifyToken(ctx context.Context, in *profile.TokenRequest) (*profile.AccessDetails, error) {
+	c.mu.Lock()
+	defer c.mu.Unlock()
+
+	return nil, nil
 }
 
 // Check check the context

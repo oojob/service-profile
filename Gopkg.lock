@@ -42,7 +42,7 @@
   version = "v1.8.0"
 
 [[projects]]
-  digest = "1:8d80e5888d7b90f79336c5aa51846ca45147f56fdc48b5870794c0ee5a67d6b6"
+  digest = "1:b32fff55ac1981dcd585dc0ecbf94f58aae01ce6698dd6496bb35cd66084f357"
   name = "github.com/golang/protobuf"
   packages = [
     "proto",
@@ -53,8 +53,8 @@
     "ptypes/timestamp",
   ]
   pruneopts = "UT"
-  revision = "6c66de79d66478d166c7ea05f5d2ccaf016fbd6b"
-  version = "v1.4.1"
+  revision = "d04d7b157bb510b1e0c10132224b616ac0e26b17"
+  version = "v1.4.2"
 
 [[projects]]
   branch = "master"
@@ -152,11 +152,11 @@
 
 [[projects]]
   branch = "master"
-  digest = "1:59d9e88516063504c59bf4b1a08e4e5142887e958498a49de181058a7c70884a"
+  digest = "1:935fbd22c45ed6c158cc772f4b3106652eedc4a3c8765abf3cf377c2151d831a"
   name = "github.com/oojob/protorepo-profile-go"
   packages = ["."]
   pruneopts = "UT"
-  revision = "674d4a7900f1ec77a871cc85826ccf3486e8e9a7"
+  revision = "abb93bcd2bb32134d18ad0e5edb1e3a581318861"
 
 [[projects]]
   digest = "1:1d835d5c3153aceef96c2d58866edde1aa70e25339831cff07b1e47456410e5c"
@@ -330,7 +330,7 @@
     "trace",
   ]
   pruneopts = "UT"
-  revision = "7e3656a0809f6f95abd88ac65313578f80b00df2"
+  revision = "a91f0712d120a21e49061d61eb6ba9b88cb0d376"
 
 [[projects]]
   branch = "master"
@@ -342,14 +342,14 @@
 
 [[projects]]
   branch = "master"
-  digest = "1:d85f9416a95aba57c985b1f48f900da97404d8258c3374cce4e49616c57bf8c9"
+  digest = "1:020620a097c2bfd056c8db7d31a69ea2cfed874ce985763dcd9ae00f9fa5f74b"
   name = "golang.org/x/sys"
   packages = [
     "internal/unsafeheader",
     "unix",
   ]
   pruneopts = "UT"
-  revision = "7e40ca221e254089b05fb9efcd69844a57f6a367"
+  revision = "1151b9dac4a98d49ef7f80f07ddd826ff51e0b36"
 
 [[projects]]
   digest = "1:8d8faad6b12a3a4c819a3f9618cb6ee1fa1cfc33253abeeea8b55336721e3405"
@@ -378,11 +378,11 @@
 
 [[projects]]
   branch = "master"
-  digest = "1:1c2a9b5021f7fe23a6f880468633f407f8b600a67e29b10f1892ae4425085820"
+  digest = "1:7ac26fa764d15fdbc6a9b6de1d29fc0b38bbd485d24a2aa80add05a064ec6a04"
   name = "google.golang.org/genproto"
   packages = ["googleapis/rpc/status"]
   pruneopts = "UT"
-  revision = "f5ebc3bea3804948c8feb1e2b62323d73add1083"
+  revision = "fc4c6c6a658718fcfdc6a03ec80654c26cf8c8d7"
 
 [[projects]]
   digest = "1:d123dd3aaf10a6875516a298cd1124693b76ec9565e564820f3cc639d207a0c7"
@@ -436,7 +436,7 @@
   version = "v1.29.1"
 
 [[projects]]
-  digest = "1:063bda020fa85c87e9da940e5e00e7d22340393f8c92864b497f1df2c2ebe7a4"
+  digest = "1:991e7d52cfafec4a4faf3666ce4a02cda6269b901e751d263573fd3904b54cbe"
   name = "google.golang.org/protobuf"
   packages = [
     "encoding/prototext",
@@ -472,8 +472,8 @@
     "types/known/timestamppb",
   ]
   pruneopts = "UT"
-  revision = "8b0d71ac935315b10385aaaf30175de0c74bbba6"
-  version = "v1.22.0"
+  revision = "d165be301fb1e13390ad453281ded24385fd8ebc"
+  version = "v1.23.0"
 
 [[projects]]
   digest = "1:2d32701bd465142606b3a84562c6c63b2950f0fb1bf82f231116a7b89de40e2d"
