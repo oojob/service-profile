@@ -17,8 +17,13 @@ func (ctx *Context) UpdateProfile(profile *model.Profile) (string, error) {
 }
 
 // Auth :- help's us to authenticate
-func (ctx *Context) Auth(in *profile.AuthRequest) (string, error) {
+func (ctx *Context) Auth(in *profile.AuthRequest) (*profile.AuthResponse, error) {
 	return ctx.Database.Auth(in)
+}
+
+// VerifyToken help's us to verify token
+func (ctx *Context) VerifyToken(tokenString string) (*profile.AccessDetails, error) {
+	return ctx.Database.VerifyToken(tokenString)
 }
 
 // ReadProfile : -read a single profile

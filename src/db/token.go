@@ -4,6 +4,7 @@ import (
 	"time"
 
 	"github.com/dgrijalva/jwt-go"
+	profile_repo "github.com/oojob/protorepo-profile-go"
 	"github.com/oojob/service-profile/src/model"
 	uuid "github.com/satori/go.uuid"
 	"github.com/spf13/viper"
@@ -54,10 +55,10 @@ type Authable interface {
 }
 
 // Encode a claim into a JWT
-func (db *Database) Encode(profile *model.Profile) (string, error) {
+func (db *Database) Encode(profile *model.Profile) (*profile_repo.AuthResponse, error) {
 	ts, err := db.CreateToken(profile)
 	if err != nil {
-		return "", err
+		return nil, err
 	}
 	userid := profile.ID.Hex()
 
@@ -66,14 +67,18 @@ func (db *Database) Encode(profile *model.Profile) (string, error) {
 	now := time.Now()
 	errAccess := db.redis.Set(ts.AccessUUID, userid, at.Sub(now)).Err()
 	if errAccess != nil {
-		return "", errAccess
+		return nil, errAccess
 	}
 	errRefresh := db.redis.Set(ts.RefreshUUID, userid, rt.Sub(now)).Err()
 	if errRefresh != nil {
-		return "", errRefresh
+		return nil, errRefresh
 	}
 
-	return ts.AccessToken, nil
+	return &profile_repo.AuthResponse{
+		AccessToken:  ts.AccessToken,
+		RefreshToken: ts.RefreshToken,
+		Valid:        true,
+	}, nil
 }
 
 // Decode a token string into a token object

@@ -7,6 +7,7 @@ import (
 	"fmt"
 	"io"
 
+	"github.com/dgrijalva/jwt-go"
 	"github.com/golang/protobuf/ptypes"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
@@ -177,11 +178,11 @@ func (db *Database) UpdateProfile(in *model.Profile) (string, error) {
 }
 
 // Auth :- authentication
-func (db *Database) Auth(in *profile.AuthRequest) (string, error) {
+func (db *Database) Auth(in *profile.AuthRequest) (*profile.AuthResponse, error) {
 	profileCollection := db.mongo.Collection("profile")
 	session, err := db.mongo.Client().StartSession()
 	if err != nil {
-		return "", err
+		return nil, err
 	}
 	defer session.EndSession(context.Background())
 
@@ -189,26 +190,53 @@ func (db *Database) Auth(in *profile.AuthRequest) (string, error) {
 	_, err = session.WithTransaction(context.Background(), func(sessionContext mongo.SessionContext) (interface{}, error) {
 		result := profileCollection.FindOne(sessionContext, bson.M{"username": in.GetUsername()})
 		if err := result.Decode(&profile); err != nil {
-			return "", err
+			return nil, err
 		}
 
-		return "", nil
+		return nil, nil
 	})
 
 	if profile.Username == "" {
-		return "", errors.New("no account found for this usernames")
+		return nil, errors.New("no account found for this usernames")
 	}
 
 	if matched := CheckPasswordHash(in.GetPassword(), profile.Security.Password); !matched {
-		return "", errors.New("password do not matched")
+		return nil, errors.New("password do not matched")
 	}
 
-	token, err := db.Encode(&profile)
+	authResponse, err := db.Encode(&profile)
 	if err != nil {
-		return "", err
+		return nil, err
 	}
 
-	return token, nil
+	return authResponse, nil
+}
+
+// VerifyToken help's us to verify and extract identity
+func (db *Database) VerifyToken(tokenString string) (*profile.AccessDetails, error) {
+	token, err := jwt.Parse(tokenString, func(token *jwt.Token) (interface{}, error) {
+		//Make sure that the token method conform to "SigningMethodHMAC"
+		if _, ok := token.Method.(*jwt.SigningMethodHMAC); !ok {
+			return nil, fmt.Errorf("unexpected signing method: %v", token.Header["alg"])
+		}
+		return accessSecret, nil
+	})
+
+	if claim, ok := token.Claims.(*AccessTokenClaim); !ok && !token.Valid {
+		return &profile.AccessDetails{
+			AccessUuid:  claim.Person.AccessUUID,
+			AccountType: claim.Person.AccountType,
+			Authorized:  claim.Person.Authorized,
+			Username:    claim.Person.Username,
+			Email:       claim.Person.Email,
+			UserId:      claim.Person.UserID,
+			Verified:    claim.Person.Verified,
+			Identifier:  claim.Person.Identifier,
+			Exp:         claim.Person.Exp,
+		}, err
+	}
+
+	return nil, nil
 }
 
 // ReadProfile : -read a single profile
