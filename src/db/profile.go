@@ -214,7 +214,7 @@ func (db *Database) Auth(in *profile.AuthRequest) (*profile.AuthResponse, error)
 
 // VerifyToken help's us to verify and extract identity
 func (db *Database) VerifyToken(tokenString string) (*profile.AccessDetails, error) {
-	token, err := jwt.Parse(tokenString, func(token *jwt.Token) (interface{}, error) {
+	token, err := jwt.ParseWithClaims(tokenString, &AccessTokenClaim{}, func(token *jwt.Token) (interface{}, error) {
 		//Make sure that the token method conform to "SigningMethodHMAC"
 		if _, ok := token.Method.(*jwt.SigningMethodHMAC); !ok {
 			return nil, fmt.Errorf("unexpected signing method: %v", token.Header["alg"])
@@ -222,7 +222,7 @@ func (db *Database) VerifyToken(tokenString string) (*profile.AccessDetails, err
 		return accessSecret, nil
 	})
 
-	if claim, ok := token.Claims.(*AccessTokenClaim); !ok && !token.Valid {
+	if claim, ok := token.Claims.(*AccessTokenClaim); ok && token.Valid {
 		return &profile.AccessDetails{
 			AccessUuid:  claim.Person.AccessUUID,
 			AccountType: claim.Person.AccountType,
