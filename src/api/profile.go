@@ -28,6 +28,22 @@ func getIdentity(identity *protobuf.Identifier) model.IdentifierModel {
 	return identityModel
 }
 
+func setIdentity(in *model.IdentifierModel) *protobuf.Identifier {
+	identifier := protobuf.Identifier{
+		Identifier:                in.Identifier,
+		Name:                      in.Name,
+		AlternateName:             in.AlternateName,
+		AdditionalType:            in.AdditionalType,
+		Type:                      in.Type,
+		Description:               in.Description,
+		DisambiguatingDescription: in.DisambiguatingDescription,
+		Headline:                  in.Headline,
+		Slogan:                    in.Slogan,
+	}
+
+	return &identifier
+}
+
 func getEmail(email *protobuf.Email) model.EmailModel {
 	emailModel := model.EmailModel{
 		Email:       email.GetEmail(),
@@ -38,6 +54,16 @@ func getEmail(email *protobuf.Email) model.EmailModel {
 	return emailModel
 }
 
+func setEmail(in *model.EmailModel) *protobuf.Email {
+	email := protobuf.Email{
+		Email:  in.Email,
+		Show:   in.Show,
+		Status: in.EmailStatus,
+	}
+
+	return &email
+}
+
 func getEducation(education *profile.Education) model.EducationModel {
 	educationModel := model.EducationModel{
 		Education: education.GetEducation(),
@@ -45,6 +71,15 @@ func getEducation(education *profile.Education) model.EducationModel {
 	}
 
 	return educationModel
+}
+
+func setEducation(in *model.EducationModel) *profile.Education {
+	education := profile.Education{
+		Education: in.Education,
+		Show:      in.Show,
+	}
+
+	return &education
 }
 
 func getAddress(address *protobuf.Address) model.AddressModel {
@@ -59,6 +94,18 @@ func getAddress(address *protobuf.Address) model.AddressModel {
 	return addressModel
 }
 
+func setAddress(in *model.AddressModel) *protobuf.Address {
+	address := protobuf.Address{
+		Country:    in.Country,
+		Locality:   in.Locality,
+		PostalCode: in.PostalCode,
+		Region:     in.Region,
+		Street:     in.Street,
+	}
+
+	return &address
+}
+
 func getSecurity(security *profile.ProfileSecurity) model.ProfileSecutiryModel {
 	securityModel := model.ProfileSecutiryModel{
 		Password:     security.GetPassword(),
@@ -71,6 +118,14 @@ func getSecurity(security *profile.ProfileSecurity) model.ProfileSecutiryModel {
 	}
 
 	return securityModel
+}
+
+func setSecurity(in *model.ProfileSecutiryModel) *profile.ProfileSecurity {
+	security := profile.ProfileSecurity{
+		Verified: in.Verified,
+	}
+
+	return &security
 }
 
 func getProfile(in *profile.Profile) model.Profile {
@@ -89,6 +144,26 @@ func getProfile(in *profile.Profile) model.Profile {
 	}
 
 	return profileModel
+}
+
+func setProfile(in *model.Profile) profile.Profile {
+
+	profileProtobuf := profile.Profile{
+		Id:              in.ID.Hex(),
+		Identity:        setIdentity(&in.Identity),
+		GivenName:       in.GivenName,
+		MiddleName:      in.MiddleName,
+		FamilyName:      in.FamilyName,
+		Username:        in.Username,
+		Email:           setEmail(&in.Email),
+		Gender:          in.Gender,
+		CurrentPosition: in.CurrentPosition,
+		Education:       setEducation(&in.Education),
+		Address:         setAddress(&in.Address),
+		Security:        setSecurity(&in.Security),
+	}
+
+	return profileProtobuf
 }
 
 // CreateProfile cretaes a profile
@@ -127,7 +202,7 @@ func (c *API) ReadProfile(ctx context.Context, in *profile.ReadProfileRequest) (
 		return nil, status.Errorf(codes.InvalidArgument, fmt.Sprintf("Could not convert to ObjectId: %v", err))
 	}
 
-	_, err = context.ReadProfile(&id)
+	profileModel, err := context.ReadProfile(&id)
 	if err != nil {
 		// span.SetStatus(trace.Status{Code: trace.StatusCodeInternal, Message: err.Error()})
 		return nil, status.Errorf(
@@ -135,8 +210,9 @@ func (c *API) ReadProfile(ctx context.Context, in *profile.ReadProfileRequest) (
 			fmt.Sprintf("Invalid Email Value: %v", err),
 		)
 	}
+	profileProtobuf := setProfile(profileModel)
 
-	return nil, nil
+	return &profileProtobuf, nil
 }
 
 // UpdateProfile :- update account
