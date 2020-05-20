@@ -13,6 +13,8 @@ import (
 	"github.com/oojob/service-profile/src/api"
 	"github.com/oojob/service-profile/src/app"
 	"github.com/sirupsen/logrus"
+	"go.opentelemetry.io/otel/api/global"
+	"go.opentelemetry.io/otel/plugin/grpctrace"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/codes"
 	_ "google.golang.org/grpc/encoding/gzip" // Install the gzip compressor
@@ -66,11 +68,13 @@ func listenGRPC(api *api.API, port int) error {
 		grpc.ConnectionTimeout(time.Minute*30),
 		grpc.MaxRecvMsgSize(1024*1024*128),
 		grpc_middleware.WithUnaryServerChain(
+			grpctrace.UnaryServerInterceptor(global.Tracer("")),
 			ratelimit.UnaryServerInterceptor(limiter),
 			grpc_ctxtags.UnaryServerInterceptor(grpc_ctxtags.WithFieldExtractor(grpc_ctxtags.CodeGenRequestFieldExtractor)),
 			grpc_recovery.UnaryServerInterceptor(recoveryOpts...),
 		),
 		grpc_middleware.WithStreamServerChain(
+			grpctrace.StreamServerInterceptor(global.Tracer("")),
 			ratelimit.StreamServerInterceptor(limiter),
 			grpc_ctxtags.StreamServerInterceptor(grpc_ctxtags.WithFieldExtractor(grpc_ctxtags.CodeGenRequestFieldExtractor)),
 			grpc_recovery.StreamServerInterceptor(recoveryOpts...),

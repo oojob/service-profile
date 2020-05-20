@@ -306,6 +306,36 @@
   version = "v1.3.3"
 
 [[projects]]
+  digest = "1:f3f8b6b415ea945786a070128a3ed1e9564bbc494fd799d7b0fccbbc12258340"
+  name = "go.opentelemetry.io/otel"
+  packages = [
+    "api/correlation",
+    "api/global",
+    "api/global/internal",
+    "api/internal",
+    "api/kv",
+    "api/kv/value",
+    "api/label",
+    "api/metric",
+    "api/metric/registry",
+    "api/propagation",
+    "api/trace",
+    "api/unit",
+    "exporters/trace/stdout",
+    "internal/trace/parent",
+    "plugin/grpctrace",
+    "sdk",
+    "sdk/export/trace",
+    "sdk/internal",
+    "sdk/resource",
+    "sdk/trace",
+    "sdk/trace/internal",
+  ]
+  pruneopts = "UT"
+  revision = "ce266f9656b4455c6e8a0e9cd9376d0f50cd5a0b"
+  version = "v0.5.0"
+
+[[projects]]
   branch = "master"
   digest = "1:d71baed52a5a67407a72b63949aa042ea68bb32fdab03e07704a4f1dc309d193"
   name = "golang.org/x/crypto"
@@ -515,6 +545,10 @@
     "go.mongodb.org/mongo-driver/mongo",
     "go.mongodb.org/mongo-driver/mongo/options",
     "go.mongodb.org/mongo-driver/mongo/readpref",
+    "go.opentelemetry.io/otel/api/global",
+    "go.opentelemetry.io/otel/exporters/trace/stdout",
+    "go.opentelemetry.io/otel/plugin/grpctrace",
+    "go.opentelemetry.io/otel/sdk/trace",
     "golang.org/x/crypto/bcrypt",
     "google.golang.org/grpc",
     "google.golang.org/grpc/codes",
