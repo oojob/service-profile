@@ -224,8 +224,31 @@ func (c *API) Auth(ctx context.Context, in *profile.AuthRequest) (*profile.AuthR
 func (c *API) Logout(ctx context.Context, in *profile.TokenRequest) (*protobuf.DefaultResponse, error) {
 	c.mu.Lock()
 	defer c.mu.Unlock()
+	context := c.App.NewContext()
 
-	return nil, nil
+	accessDetails, err := context.VerifyToken(in.GetToken())
+	if err != nil {
+		return nil, err
+	}
+
+	status, err := context.Logout(accessDetails.AccessUuid)
+	if err != nil {
+		return nil, err
+	}
+
+	if status == false {
+		return &protobuf.DefaultResponse{
+			Status: false,
+			Error:  "",
+			Code:   int64(codes.Aborted),
+		}, nil
+	}
+
+	return &protobuf.DefaultResponse{
+		Status: true,
+		Error:  "",
+		Code:   int64(codes.OK),
+	}, nil
 }
 
 // RefreshToken help's us to refresh the access token without signing out

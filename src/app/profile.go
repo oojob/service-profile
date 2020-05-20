@@ -31,6 +31,11 @@ func (ctx *Context) ReadProfile(id *primitive.ObjectID) (*model.Profile, error) 
 	return ctx.Database.ReadProfile(id)
 }
 
+// Logout help's us to remove all login data from redis and clear session
+func (ctx *Context) Logout(accessUUID string) (bool, error) {
+	return ctx.Database.Logout(accessUUID)
+}
+
 // ValidateUsername :- validates the given username for availability
 func (ctx *Context) ValidateUsername(username string) (bool, error) {
 	return ctx.Database.ValidateUsername(username)

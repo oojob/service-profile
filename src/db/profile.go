@@ -212,6 +212,16 @@ func (db *Database) Auth(in *profile.AuthRequest) (*profile.AuthResponse, error)
 	return authResponse, nil
 }
 
+// Logout help's us to remove all login data from redis and clear session
+func (db *Database) Logout(accessUUID string) (bool, error) {
+	_, err := db.redis.Del(accessUUID).Result()
+	if err != nil {
+		return false, err
+	}
+
+	return true, nil
+}
+
 // VerifyToken help's us to verify and extract identity
 func (db *Database) VerifyToken(tokenString string) (*profile.AccessDetails, error) {
 	token, err := jwt.ParseWithClaims(tokenString, &AccessTokenClaim{}, func(token *jwt.Token) (interface{}, error) {
