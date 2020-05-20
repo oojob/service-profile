@@ -222,6 +222,57 @@ func (db *Database) Logout(accessUUID string) (bool, error) {
 	return true, nil
 }
 
+// Refresh generates anew pair of refresh token
+func (db *Database) Refresh(tokenString string) (*profile.AuthResponse, error) {
+	profileCollection := db.mongo.Collection("profile")
+	session, err := db.mongo.Client().StartSession()
+	if err != nil {
+		return nil, err
+	}
+	defer session.EndSession(context.Background())
+
+	token, err := jwt.ParseWithClaims(tokenString, &RefreshTokenClaim{}, func(token *jwt.Token) (interface{}, error) {
+		//Make sure that the token method conform to "SigningMethodHMAC"
+		if _, ok := token.Method.(*jwt.SigningMethodHMAC); !ok {
+			return nil, fmt.Errorf("unexpected signing method: %v", token.Header["alg"])
+		}
+		return accessSecret, nil
+	})
+
+	claim, ok := token.Claims.(*RefreshTokenClaim)
+	if ok && token.Valid {
+		refreshUUID := claim.Refresh.RefreshUUID
+		deleted, err := db.Logout(refreshUUID)
+		if !deleted || err != nil {
+			return nil, errors.New("invalid token deocde data")
+		}
+
+		// Create new pairs of refresh and access tokens
+		userID, err := primitive.ObjectIDFromHex(claim.Refresh.UserID)
+		if err != nil {
+			return nil, errors.New("Invalid ObjectID")
+		}
+		var profileDetails model.Profile
+		_, err = session.WithTransaction(context.Background(), func(sessionContext mongo.SessionContext) (interface{}, error) {
+			result := profileCollection.FindOne(sessionContext, bson.M{"_id": userID})
+			if err := result.Decode(&profileDetails); err != nil {
+				return nil, err
+			}
+
+			return nil, nil
+		})
+
+		authResponse, err := db.Encode(&profileDetails)
+		if err != nil {
+			return nil, err
+		}
+
+		return authResponse, nil
+	}
+
+	return nil, errors.New("invalid token")
+}
+
 // VerifyToken help's us to verify and extract identity
 func (db *Database) VerifyToken(tokenString string) (*profile.AccessDetails, error) {
 	token, err := jwt.ParseWithClaims(tokenString, &AccessTokenClaim{}, func(token *jwt.Token) (interface{}, error) {

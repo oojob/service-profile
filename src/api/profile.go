@@ -255,8 +255,10 @@ func (c *API) Logout(ctx context.Context, in *profile.TokenRequest) (*protobuf.D
 func (c *API) RefreshToken(ctx context.Context, in *profile.TokenRequest) (*profile.AuthResponse, error) {
 	c.mu.Lock()
 	defer c.mu.Unlock()
+	context := c.App.NewContext()
 
-	return nil, nil
+	authResponse, err := context.Refresh(in.GetToken())
+	return authResponse, err
 }
 
 // VerifyToken help's us to verify the auth token

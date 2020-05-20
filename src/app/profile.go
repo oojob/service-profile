@@ -21,6 +21,11 @@ func (ctx *Context) Auth(in *profile.AuthRequest) (*profile.AuthResponse, error)
 	return ctx.Database.Auth(in)
 }
 
+// Refresh :- help's us to refresh authentication data
+func (ctx *Context) Refresh(tokenString string) (*profile.AuthResponse, error) {
+	return ctx.Database.Refresh(tokenString)
+}
+
 // VerifyToken help's us to verify token
 func (ctx *Context) VerifyToken(tokenString string) (*profile.AccessDetails, error) {
 	return ctx.Database.VerifyToken(tokenString)

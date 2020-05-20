@@ -81,22 +81,6 @@ func (db *Database) Encode(profile *model.Profile) (*profile_repo.AuthResponse, 
 	}, nil
 }
 
-// Decode a token string into a token object
-// func (db *Database) Decode(tokenString string) (*CustomClaims, error) {
-
-// 	// Parse the token
-// 	token, err := jwt.ParseWithClaims(tokenString, &CustomClaims{}, func(token *jwt.Token) (interface{}, error) {
-// 		return key, nil
-// 	})
-
-// 	// Validate the token and return the custom claims
-// 	if claims, ok := token.Claims.(*CustomClaims); ok && token.Valid {
-// 		return claims, nil
-// 	} else {
-// 		return nil, err
-// 	}
-// }
-
 // CreateToken generates anew token
 func (db *Database) CreateToken(profile *model.Profile) (*model.TokenDetails, error) {
 	td := &model.TokenDetails{}
